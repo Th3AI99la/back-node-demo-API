@@ -1,10 +1,30 @@
-var valor1 = 33;
-var valor2 = 19;
+// Importar Express
+const express = require("express");
 
-var valor3 = 10;
-var valor4 = 911;
+//App
+const app = express();
 
+// Rotas
 
-console.log('A multiplicação do valor 1 e 2: ', valor1 * valor2);
+app.get("/", function (req, res) {
+  res.send("Thalles Henrique Alves de Souza");
+});
 
-console.log('A soma do valor 3 e 4: ', valor3 + valor4);
+app.get("/user", function (req, res) {
+  res.send({
+    nome: "Thalles",
+    idade: 22,
+  });
+});
+
+app.delete("/user", function (req, res) {
+  res.send({
+    nome: "Thalles DELETADO",
+    idade: 22,
+  });
+});
+
+// Servidor
+app.listen(8080, function () {
+  console.log("Servidor rodando !");
+});
