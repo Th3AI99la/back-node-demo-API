@@ -4,23 +4,20 @@ const express = require("express");
 //App
 const app = express();
 
+
+
 // Rotas
 
 app.get("/", function (req, res) {
-  res.send("Thalles Henrique Alves de Souza");
+  res.send("Olá, mundo ");
 });
 
-app.get("/user", function (req, res) {
-  res.send({
-    nome: "Thalles",
-    idade: 22,
-  });
-});
+//Endpoint's
 
-app.delete("/user", function (req, res) {
+app.get("/user/:nome/sobrenome/:sobrenome", function (req, res) {
   res.send({
-    nome: "Thalles DELETADO",
-    idade: 22,
+    nome: req.params.nome,
+    sobrenome: req.params.sobrenome
   });
 });
 
