@@ -2,6 +2,7 @@
   "name": "back-node-demo-api",
   "version": "1.0.0",
   "description": "js",
+  "type": "module",
   "main": "app.js",
   "scripts": {
     "meuserver": "npx nodemon app.js",
