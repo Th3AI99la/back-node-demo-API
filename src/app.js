@@ -20,6 +20,6 @@ app.get('/user/:nome/sobrenome/:sobrenome', function (req, res) {
 });
 
 // Servidor
-app.listen(8080, function () {
+app.listen(3010, function () {
   console.log('Servidor rodando !');
 });
