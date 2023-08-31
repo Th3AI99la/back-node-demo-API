@@ -1,25 +1,17 @@
 // Importar Express
 import express from 'express';
+import { userRouter } from './modules/user/user.controller.js';
+import { productRouter } from './modules/products/product.controller.js';
 
 //App
 const app = express();
 
 // Rotas
 
-app.get('/', function (req, res) {
-  res.send('Birulinha 123 ');
-});
-
-//Endpoint's
-
-app.get('/user/:nome/sobrenome/:sobrenome', function (req, res) {
-  res.send({
-    nome: req.params.nome,
-    sobrenome: req.params.sobrenome,
-  });
-});
+app.use(userRouter);
+app.use(productRouter);
 
 // Servidor
-app.listen(3010, function () {
+app.listen(8080, function () {
   console.log('Servidor rodando !');
 });
