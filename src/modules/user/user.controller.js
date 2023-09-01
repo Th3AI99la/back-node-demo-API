@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { PrismaClient } from '@prisma/client';
 
 const userRouter = Router();
 
@@ -6,8 +7,12 @@ const router = Router();
 
 userRouter.use('/user', router);
 
-router.get('/', function (req, res) {
-  res.send('Olá, mundo! USER AGORA ');
+router.get('/', async function (req, res) {
+  const prisma = new PrismaClient();
+
+  const users = await prisma.user.findMany();
+
+  res.send(users);
 });
 
 router.get('/:nome', function (req, res) {
@@ -17,6 +22,5 @@ router.get('/:nome', function (req, res) {
 router.get('/user/:lindo', function (req, res) {
   res.send('Oiie vc e mt lindo ');
 });
-
 
 export default userRouter;
