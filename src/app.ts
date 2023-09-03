@@ -12,6 +12,6 @@ app.use(express.json());
 routerLoader(app);
 
 // Servidor
-app.listen(8080, function () {
+app.listen(8080, function (): void {
   console.log('\nServidor rodando! \nPorta: 8080\n');
 });
