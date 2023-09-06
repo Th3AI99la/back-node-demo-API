@@ -8,7 +8,7 @@ const app = express();
 // Conversão para Json
 app.use(express.json());
 
-// Rotas
+// Rotas automaticas ref. 'routerLoader.ts'
 routerLoader(app);
 
 // Servidor
