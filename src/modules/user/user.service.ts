@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { UserModel } from './user.model';
 import { UserInsertDTO } from './dtos/user-insert.dto';
 import { NotFoundException } from '@exceptions/not-found-exception';
+import { BadRequestException } from '@exceptions/bad-request-exception';
 
 const prisma = new PrismaClient();
 
@@ -18,6 +19,19 @@ export const getUsers = async (): Promise<UserModel[]> => {
 
 // METODO POST - criar usuario
 export const createUser = async (body: UserInsertDTO): Promise<UserModel> => {
+  // VALIDADE DE E-MAIL
+  const userEmail = await getUserByEmail(body.email).catch(() => undefined);
+
+  if (userEmail) {
+    throw new BadRequestException('Esse e-mail já existe no BD');
+  }
+  // VALIDADE DE CPF
+  const userCpf = await getUserByCpf(body.cpf).catch(() => undefined);
+
+  if (userCpf) {
+    throw new BadRequestException('Esse CPF já existe no BD');
+  }
+
   return prisma.user.create({
     data: body,
   });
@@ -57,4 +71,33 @@ export const updateUser = async (
   } catch (error) {
     throw new Error('Não foi possível atualizar as informações do usuário.');
   }
+};
+
+// Tratando os erros ao criar um usuário (E-MAIL)
+
+export const getUserByEmail = async (email: string): Promise<UserModel> => {
+  const user = await prisma.user.findFirst({
+    where: {
+      email,
+    },
+  });
+  // Se eu não encontrar o user, subir a exeção
+  if (!user) {
+    throw new NotFoundException('User');
+  }
+  return user;
+};
+
+// Tratando os erros ao criar um usuário (CPF)
+export const getUserByCpf = async (cpf: string): Promise<UserModel> => {
+  const user = await prisma.user.findFirst({
+    where: {
+      cpf,
+    },
+  });
+  // Se eu não encontrar o user, subir a exeção
+  if (!user) {
+    throw new NotFoundException('User');
+  }
+  return user;
 };
