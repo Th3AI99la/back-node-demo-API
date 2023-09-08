@@ -5,6 +5,7 @@ import { NotFoundException } from '@exceptions/not-found-exception';
 
 const prisma = new PrismaClient();
 
+// METODO GET - buscar usuario
 export const getUsers = async (): Promise<UserModel[]> => {
   const users = await prisma.user.findMany();
 
@@ -15,8 +16,45 @@ export const getUsers = async (): Promise<UserModel[]> => {
   return prisma.user.findMany();
 };
 
+// METODO POST - criar usuario
 export const createUser = async (body: UserInsertDTO): Promise<UserModel> => {
   return prisma.user.create({
     data: body,
   });
+};
+
+// METODO DELETE - deletar usuario (ChatGPT)
+export const deleteUser = async (userId: number): Promise<void> => {
+  try {
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+  } catch (error) {
+    // Se ocorrer um erro durante a exclusão, você pode lançar uma exceção ou tratá-lo de acordo com suas necessidades
+    throw new Error('Não foi possível excluir o usuário.');
+  }
+};
+
+// METODO PUT - alterar usuario (ChatGPT)
+export const updateUser = async (
+  userId: number,
+  updatedUser: UserInsertDTO,
+): Promise<UserModel | null> => {
+  try {
+    // Verifique se o usuário existe
+    const existingUser = await prisma.user.findUnique({ where: { id: userId } });
+    if (!existingUser) {
+      throw new NotFoundException('User');
+    }
+
+    // Atualize as informações do usuário
+    const updatedUserInfo = await prisma.user.update({
+      where: { id: userId },
+      data: updatedUser,
+    });
+
+    return updatedUserInfo;
+  } catch (error) {
+    throw new Error('Não foi possível atualizar as informações do usuário.');
+  }
 };
