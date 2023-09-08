@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { createUser, getUsers, deleteUser, updateUser } from './user.service';
 import { UserInsertDTO } from './dtos/user-insert.dto';
 import { ReturnError } from '@exceptions/dtos/return-error.dto';
-import { InternalServerErrorException } from '@exceptions/internal-server-error.exception';
+import { NotFoundException } from '@exceptions/not-found-exception';
 
 const userRouter = Router();
 
@@ -13,11 +13,11 @@ userRouter.use('/user', router);
 // METODO GET - buscar usuario
 router.get('/', async (_, res: Response): Promise<void> => {
   const users = await getUsers().catch((error) => {
-    if (error instanceof InternalServerErrorException) {
+    // quando buscar e não retornar nenhum valor, ele exibe o 204 - NotFoundException
+    if (error instanceof NotFoundException) {
       res.status(204);
     } else {
       new ReturnError(res, error);
-      res.status(500).send(error.message);
     }
   });
   res.send(users);
