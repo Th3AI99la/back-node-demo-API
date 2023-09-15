@@ -10,5 +10,8 @@ export const validadePassword = async (
   password: string,
   PasswordHashed: string,
 ): Promise<boolean> => {
+  //console.log('password: ', password);
+  //console.log('\nPasswordHashed: ', PasswordHashed);
+
   return compare(password, PasswordHashed);
 };

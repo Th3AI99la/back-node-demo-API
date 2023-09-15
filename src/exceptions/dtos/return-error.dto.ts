@@ -11,11 +11,11 @@ export class ReturnError {
     this.message = error.message;
 
     if (error instanceof AppException) {
-      this.errorCode = errorCode;
+      this.errorCode = error.errorCode;
+    } else {
+      this.errorCode = errorCode || 500;
     }
 
-    this.errorCode = errorCode;
-
-    res.status(this.errorCode || 500).send(this);
+    res.status(this.errorCode).send(this);
   }
 }
