@@ -3,6 +3,7 @@ import { createUser, getUsers, deleteUser, updateUser } from './user.service';
 import { UserInsertDTO } from './dtos/user-insert.dto';
 import { ReturnError } from '@exceptions/dtos/return-error.dto';
 import { NotFoundException } from '@exceptions/not-found-exception';
+import { verifyToken } from 'src/utils/auth';
 
 const userRouter = Router();
 
@@ -10,8 +11,16 @@ const router = Router();
 
 userRouter.use('/user', router);
 
-// METODO GET - buscar usuario
-router.get('/', async (_, res: Response): Promise<void> => {
+// METODO GET - listar usuarios
+router.get('/', async (req: Request, res: Response): Promise<void> => {
+  const authorization = req.headers.authorization;
+
+  verifyToken(authorization).catch((error) => {
+    new ReturnError(res, error);
+  });
+
+  console.log('authorization', authorization);
+
   const users = await getUsers().catch((error) => {
     // quando buscar e não retornar nenhum valor, ele exibe o 204 - NotFoundException
     if (error instanceof NotFoundException) {
