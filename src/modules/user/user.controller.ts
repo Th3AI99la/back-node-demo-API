@@ -5,26 +5,19 @@ import { ReturnError } from '@exceptions/dtos/return-error.dto';
 import { NotFoundException } from '@exceptions/not-found-exception';
 import { authMiddleware } from '@middlewares/auth.middleware';
 
-const userRouter = Router();
+// FUNÇÃO METODO POST - criar usuario (APENAS A FUNÇÃO)
+const createUserController = async (
+  req: Request<undefined, undefined, UserInsertDTO>,
+  res: Response,
+): Promise<void> => {
+  const user = await createUser(req.body);
 
-const router = Router();
+  res.send(user);
+};
 
-userRouter.use('/user', router);
+// FUNÇÃO METODO GET - listar usuarios (APENAS A FUNÇÃO)
 
-// METODO POST - criar usuario
-router.post(
-  '/',
-  async (req: Request<undefined, undefined, UserInsertDTO>, res: Response): Promise<void> => {
-    const user = await createUser(req.body);
-
-    res.send(user);
-  },
-);
-
-router.use(authMiddleware);
-
-// METODO GET - listar usuarios
-router.get('/', async (req: Request, res: Response): Promise<void> => {
+const getUsersController = async (req: Request, res: Response): Promise<void> => {
   const users = await getUsers().catch((error) => {
     // quando buscar e não retornar nenhum valor, ele exibe o 204 - NotFoundException
     if (error instanceof NotFoundException) {
@@ -34,10 +27,11 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     }
   });
   res.send(users);
-});
+};
 
-// METODO DELETE - deletar usuario (ChatGPT)
-router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
+// FUNÇÃO DELETE - deletar usuario (ChatGPT) (APENAS A FUNÇÃO)
+
+const deleteUsersController = async (req: Request, res: Response): Promise<void> => {
   const userIdString = req.params.id;
 
   const userId = parseInt(userIdString, 10); // Use a base 10 para a conversão
@@ -50,10 +44,11 @@ router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
     new ReturnError(res, error);
     res.status(500).send(error.message);
   }
-});
+};
 
-// METODO PUT - alterar usuario (ChatGPT)
-router.put('/:id', async (req: Request, res: Response): Promise<void> => {
+// FUNÇÃO METODO PUT - alterar usuario (ChatGPT) (APENAS A FUNÇÃO)
+
+const putUsersController = async (req: Request, res: Response): Promise<void> => {
   const userId = parseInt(req.params.id, 10); // Converte o ID da string para número
 
   try {
@@ -72,6 +67,21 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
     new ReturnError(res, error);
     res.status(500).send(error.message);
   }
-});
+};
 
+// ROTAS
+const userRouter = Router();
+const router = Router();
+
+// ENDERENÇO
+userRouter.use('/user', router);
+
+// ROTAS = POST, USE , GET , DELETE e PUT
+router.post('/', createUserController);
+router.use(authMiddleware);
+router.get('/', getUsersController);
+router.delete('/:id', deleteUsersController);
+router.put('/:id', putUsersController);
+
+// EXPORTAÇÃO
 export default userRouter;

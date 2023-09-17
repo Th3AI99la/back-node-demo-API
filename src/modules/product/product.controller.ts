@@ -1,13 +1,19 @@
 import { Request, Response, Router } from 'express';
 
-const productRouter = Router();
+// FUNÇÃO METODO GET - listar usuarios (APENAS A FUNÇÃO)
+const getproductController = (req: Request, res: Response): void => {
+  res.send('SEU PRODUTINHO ');
+};
 
+// ROTAS
+const productRouter = Router();
 const router = Router();
 
+// ENDERENÇO
 productRouter.use('/product', router);
 
-router.get('/', function (req: Request, res: Response): void {
-  res.send('SEU PRODUTINHO ');
-});
+// ROTA METODO GET
+router.get('/', getproductController);
 
+// EXPORTAÇÃO
 export default productRouter;

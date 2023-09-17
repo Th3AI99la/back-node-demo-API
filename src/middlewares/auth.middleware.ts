@@ -18,3 +18,5 @@ export const authMiddleware = async (
       new ReturnError(res, error);
     });
 };
+
+// VERIFICA O TOKEN E RETORNA SE TEM ERRO.
