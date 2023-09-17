@@ -1,3 +1,4 @@
+import { exceptionHandleMiddleware } from '@middlewares/exception.middleware';
 import { Express } from 'express-serve-static-core';
 import fs from 'fs';
 import path from 'path';
@@ -17,6 +18,7 @@ export const routerLoader = (app: Express): void => {
 
         if (controller.default && typeof controller.default === 'function') {
           app.use(controller.default);
+          app.use(exceptionHandleMiddleware);
         }
       }
     }
