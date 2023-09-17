@@ -3,32 +3,13 @@ import { createUser, getUsers, deleteUser, updateUser } from './user.service';
 import { UserInsertDTO } from './dtos/user-insert.dto';
 import { ReturnError } from '@exceptions/dtos/return-error.dto';
 import { NotFoundException } from '@exceptions/not-found-exception';
-import { verifyToken } from 'src/utils/auth';
+import { authMiddleware } from '@middlewares/auth.middleware';
 
 const userRouter = Router();
 
 const router = Router();
 
 userRouter.use('/user', router);
-
-// METODO GET - listar usuarios
-router.get('/', async (req: Request, res: Response): Promise<void> => {
-  const authorization = req.headers.authorization;
-
-  await verifyToken(authorization);
-
-  console.log('authorization', authorization);
-
-  const users = await getUsers().catch((error) => {
-    // quando buscar e não retornar nenhum valor, ele exibe o 204 - NotFoundException
-    if (error instanceof NotFoundException) {
-      res.status(204);
-    } else {
-      throw new Error(error);
-    }
-  });
-  res.send(users);
-});
 
 // METODO POST - criar usuario
 router.post(
@@ -39,6 +20,21 @@ router.post(
     res.send(user);
   },
 );
+
+router.use(authMiddleware);
+
+// METODO GET - listar usuarios
+router.get('/', async (req: Request, res: Response): Promise<void> => {
+  const users = await getUsers().catch((error) => {
+    // quando buscar e não retornar nenhum valor, ele exibe o 204 - NotFoundException
+    if (error instanceof NotFoundException) {
+      res.status(204);
+    } else {
+      throw new Error(error);
+    }
+  });
+  res.send(users);
+});
 
 // METODO DELETE - deletar usuario (ChatGPT)
 router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
