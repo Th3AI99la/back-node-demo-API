@@ -20,6 +20,7 @@
       "@exceptions/*": ["./src/exceptions/*"],
       "@utils/*": ["./src/utils/*"],
       "@middlewares/*": ["./src/middlewares/*"],
+      "@enums/*": ["./src/enums/*"],
     }
   }
 }

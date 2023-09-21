@@ -3,7 +3,7 @@ import { UserAuth } from '@modules/auth/dtos/user-auth.dto';
 import { UserModel } from '@modules/user/user.model';
 import { sign, verify } from 'jsonwebtoken';
 
-export const PASSWORD_JWT = 'senhagrandeposteriomentemudar';
+export const PASSWORD_JWT = 'senhadoserver';
 
 export const generateToken = (user: UserModel): string => {
   return sign(

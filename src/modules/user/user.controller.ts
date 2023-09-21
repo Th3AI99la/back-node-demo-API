@@ -3,7 +3,8 @@ import { createUser, getUsers, deleteUser, updateUser } from './user.service';
 import { UserInsertDTO } from './dtos/user-insert.dto';
 import { ReturnError } from '@exceptions/dtos/return-error.dto';
 import { NotFoundException } from '@exceptions/not-found-exception';
-import { authMiddleware } from '@middlewares/auth.middleware';
+//import { authMiddleware } from '@middlewares/auth.middleware';
+import { authAdminMiddleware } from '@middlewares/auth-admin.middleware';
 
 // FUNÇÃO METODO POST - criar usuario (APENAS A FUNÇÃO)
 const createUserController = async (
@@ -78,7 +79,13 @@ userRouter.use('/user', router);
 
 // ROTAS = POST, USE , GET , DELETE e PUT
 router.post('/', createUserController);
-router.use(authMiddleware);
+
+//PARA CRIAR QUALQUER UM CRIA
+//router.use(authMiddleware);
+
+//PARA BUSCAR SOMENTE O ADMIN BUSCA
+router.use(authAdminMiddleware);
+
 router.get('/', getUsersController);
 router.delete('/:id', deleteUsersController);
 router.put('/:id', putUsersController);
