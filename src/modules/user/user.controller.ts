@@ -1,10 +1,12 @@
 import { Request, Response, Router } from 'express';
-import { createUser, getUsers, deleteUser, updateUser } from './user.service';
+import { createUser, getUsers, deleteUser, updateUser, editPassword } from './user.service';
 import { UserInsertDTO } from './dtos/user-insert.dto';
 import { ReturnError } from '@exceptions/dtos/return-error.dto';
 import { NotFoundException } from '@exceptions/not-found-exception';
-//import { authMiddleware } from '@middlewares/auth.middleware';
+import { authMiddleware } from '@middlewares/auth.middleware';
 import { authAdminMiddleware } from '@middlewares/auth-admin.middleware';
+//import { UserModel } from './user.model';
+import { UserEditPasswordDTO } from './dtos/user-edit-Password.dto';
 
 // FUNÇÃO METODO POST - criar usuario (APENAS A FUNÇÃO)
 const createUserController = async (
@@ -69,6 +71,16 @@ const putUsersController = async (req: Request, res: Response): Promise<void> =>
     res.status(500).send(error.message);
   }
 };
+const editPasswordController = async (
+  req: Request<undefined, undefined, UserEditPasswordDTO>,
+  res: Response,
+): Promise<void> => {
+  const user = await editPassword(48, req.body).catch((error) => {
+    new ReturnError(res, error);
+  });
+
+  res.send(user);
+};
 
 // ROTAS
 const userRouter = Router();
@@ -77,15 +89,12 @@ const router = Router();
 // ENDERENÇO
 userRouter.use('/user', router);
 
-// ROTAS = POST, USE , GET , DELETE e PUT
+// ROTAS = POST, USE , GET , PATCH, DELETE e PUT
+
 router.post('/', createUserController);
-
-//PARA CRIAR QUALQUER UM CRIA
-//router.use(authMiddleware);
-
-//PARA BUSCAR SOMENTE O ADMIN BUSCA
+router.use(authMiddleware);
+router.patch('/', editPasswordController);
 router.use(authAdminMiddleware);
-
 router.get('/', getUsersController);
 router.delete('/:id', deleteUsersController);
 router.put('/:id', putUsersController);
