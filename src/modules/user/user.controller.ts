@@ -5,7 +5,6 @@ import { ReturnError } from '@exceptions/dtos/return-error.dto';
 import { NotFoundException } from '@exceptions/not-found-exception';
 import { authMiddleware } from '@middlewares/auth.middleware';
 import { authAdminMiddleware } from '@middlewares/auth-admin.middleware';
-//import { UserModel } from './user.model';
 import { UserEditPasswordDTO } from './dtos/user-edit-Password.dto';
 
 // FUNÇÃO METODO POST - criar usuario (APENAS A FUNÇÃO)
