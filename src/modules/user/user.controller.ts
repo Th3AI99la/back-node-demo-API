@@ -6,6 +6,7 @@ import { NotFoundException } from '@exceptions/not-found-exception';
 import { authMiddleware } from '@middlewares/auth.middleware';
 import { authAdminMiddleware } from '@middlewares/auth-admin.middleware';
 import { UserEditPasswordDTO } from './dtos/user-edit-Password.dto';
+import { getUserByTonken } from '../../utils/auth';
 
 // FUNÇÃO METODO POST - criar usuario (APENAS A FUNÇÃO)
 const createUserController = async (
@@ -74,7 +75,9 @@ const editPasswordController = async (
   req: Request<undefined, undefined, UserEditPasswordDTO>,
   res: Response,
 ): Promise<void> => {
-  const user = await editPassword(48, req.body).catch((error) => {
+  const userAuth = await getUserByTonken(req);
+
+  const user = await editPassword(userAuth.userId, req.body).catch((error) => {
     new ReturnError(res, error);
   });
 
