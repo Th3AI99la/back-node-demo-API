@@ -1,2 +1,3 @@
-# back-node-demo-API
+# Sistema de vendas em Node.JS
+
 
